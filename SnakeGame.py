@@ -2,14 +2,12 @@ import turtle
 import time
 import random
 
-# Set up the screen
 wn = turtle.Screen()
 wn.title("Snake Game")
 wn.bgcolor("black")
 wn.setup(width=600, height=600)
 wn.tracer(0)
 
-# Snake head
 head = turtle.Turtle()
 head.speed(0)
 head.shape("square")
@@ -18,7 +16,6 @@ head.penup()
 head.goto(0, 0)
 head.direction = "stop"
 
-# Food
 food = turtle.Turtle()
 food.speed(0)
 food.shape("circle")
@@ -26,10 +23,8 @@ food.color("red")
 food.penup()
 food.goto(0, 100)
 
-# Snake body
 segments = []
 
-# Functions
 def go_up():
     if head.direction != "down":
         head.direction = "up"
@@ -64,14 +59,11 @@ def move():
         head.setx(x + 20)
 
 def check_collision():
-    # Check for collision with food
     if head.distance(food) < 20:
-        # Move the food to a random location
         x = random.randint(-290, 290)
         y = random.randint(-290, 290)
         food.goto(x, y)
 
-        # Add a segment to the snake
         new_segment = turtle.Turtle()
         new_segment.speed(0)
         new_segment.shape("square")
@@ -95,42 +87,28 @@ def check_self_collision():
             return True
     return False
 
-# Keyboard bindings
 wn.listen()
 wn.onkeypress(go_up, "w")
 wn.onkeypress(go_down, "s")
 wn.onkeypress(go_left, "a")
 wn.onkeypress(go_right, "d")
 
-# Main game loop
 while True:
     wn.update()
-
-    # Check for collisions
     if check_border_collision() or check_self_collision():
         head.goto(0, 0)
         head.direction = "stop"
-
-        # Hide the segments
         for segment in segments:
             segment.goto(1000, 1000)
-
-        # Clear the segments list
         segments.clear()
-
     check_collision()
-
-    # Move the segments in reverse order
     for i in range(len(segments) - 1, 0, -1):
         x = segments[i - 1].xcor()
         y = segments[i - 1].ycor()
         segments[i].goto(x, y)
-
     if len(segments) > 0:
         x = head.xcor()
         y = head.ycor()
         segments[0].goto(x, y)
-
     move()
-
     time.sleep(0.1)
